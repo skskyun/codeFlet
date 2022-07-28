@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Welcome to Hyosung BlockChain!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+<script>
+	function token_click(){
+		alert("5GXA를 지갑에 넣어드렸어요!");
+	}
+
+	$(document).ready(function() {
+		$("#createQR").click(function() {
+			$("#qrcode").empty();
+			var qrcode = new QRCode(document.getElementById("qrcode"), {
+		        	text: "http://3.35.11.127:80/",
+			        width: 500,
+			        height: 500,
+		        	colorDark : "#000000",
+	        		colorLight : "#ffffff",
+			        correctLevel : QRCode.CorrectLevel.H
+			});
+		});
+
+		$.getJSON('https://ipapi.co/json/', function(data) {
+			//console.log(JSON.stringify(data, null, 2));
+			console.log(data);
+			//alert("고객님 IP는 "+data.ip+"입니다.");
+		});
+	});
+</script>
+
+</head>
+<body style="width:100%">
+
+	<!--	<div id="qrcode"></div> -->
+
+	<div id="ex1" class="modal" style="max-width:600px; padding:30px 50px; margin-top: -50%;">
+		<div id="qrcode"></div>
+		<a href="#" rel="modal:close" style="float: right; font-size: 40px;">닫기</a>
+	</div>
+
+	<!--	<p><a href="#ex1" rel="modal:open">QR코드 생성하기</a></p> -->
+
+	<div>
+		<img src="GXA_INTRO.JPG" width="200" height="300" alt="Page Not Found" style="width: 90%; height: 150%; padding-top: 10%; margin: 6.5%;" />
+	</div>
+
+	<div style="text-align:center;">
+	    <button onclick="token_click();" id="clickMe" style="background-color: #77af9c;color: #d7fff1; width:800px; height:200px; font-size:90px; " type="button">Token Get!!</button>
+	</div>
+
+	<div style="text-align:center;">
+	    <button id="createQR" style="background-color: #77af9c;color: #d7fff1; width:800px; height:200px; font-size:40px; " ><a href="#ex1" rel="modal:open">나만의 QR코드 생성하기</a></button>	
+	</div>
+</body>
+</html>

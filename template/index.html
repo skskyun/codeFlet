@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Welcome to Hyosung BlockChain!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+.qr_image {
+	padding: 30px;
+}
+</style>
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+<script>var name = "<%= name %>";</script>
+<script>
+	function token_click(){
+		alert("5GXA를 지갑에 넣어드렸어요!");
+	}
+
+	function move(adv){
+//		console.log(adv);
+		//location.href ='http://localhost:3000/advertisement/'+adv;
+		if (adv == '1'){ 
+			location.href ='http://54.180.101.155/advertisement?advNumber='+adv;
+		} else {
+			alert('준비 중입니다.');
+			return;
+		}
+	}
+
+	$(document).ready(function() {
+console.log(name);
+		$("#createQR").click(function() {
+			$("#qrcode").empty();
+			var qrcode = new QRCode(document.getElementById("qrcode"), {
+		        	text: "http://3.35.11.127:80/",
+			        width: 500,
+			        height: 500,
+		        	colorDark : "#000000",
+	        		colorLight : "#ffffff",
+			        correctLevel : QRCode.CorrectLevel.H
+			});
+		});
+
+		$.getJSON('https://ipapi.co/json/', function(data) {
+			//console.log(JSON.stringify(data, null, 2));
+			console.log(data);
+			//alert("고객님 IP는 "+data.ip+"입니다.");
+		});
+	});
+</script>
+
+</head>
+<body style="width:100%">
+	<div>
+		<div style="font-size:50px;">
+			<H2 style="text-align:center; font-size:55px;"> 
+				X to Earn Platform Admin Site
+			</H2>
+		</div>
+		 <div style="display:inline-flex;">
+			<div class="qr_image" onclick="move('1')">
+				<a href="#" >
+					<h3 style="font-size:30px; text-align:center;">1. 효성 아파트</h3>
+				</a>
+				<img class="fit-picture"
+				     src="advertisement_1.JPG"
+				     alt="HS QR Site">
+			</div>
+			<div class="qr_image" onclick="move('2')">
+				<a href="#" >
+                                        <h3 style="font-size:30px; text-align:center;">2. HIS</h3>
+                                </a>
+				<img class="fit-picture"
+		                     src="advertisement_2.JPG"
+	        	             alt="HS QR Site">
+			</div>
+			<div class="qr_image" onclick="move('3')">
+			<a href="#" >
+                                  <h3 style="font-size:30px; text-align:center;">3. GXA</h3>
+                        </a>
+			<img class="fit-picture"
+	                     src="advertisement_3.JPG"
+	                     alt="HS QR Site">
+			</div>
+		</div>
+	
+	</div>
+
+</body>
+</html>

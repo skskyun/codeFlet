@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Welcome to Hyosung BlockChain!</title>
+<style>
+html { color-scheme: light dark; }
+input{ vertical-align:middle; }
+
+#counsel p{ margin-bottom:10px; }
+
+select {
+  width: 400px; /* 원하는 너비설정 */
+  height: 80px;
+  font-size: 25px;
+  padding: .8em .5em; /* 여백으로 높이 설정 */
+  font-family: inherit;  /* 폰트 상속 */
+  background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg) no-repeat 95% 50%; /* 네이티브 화살표 대체 */  
+  border: 1px solid #999; 
+  border-radius: 0px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input{
+width:290px; height:51px;
+padding:15px;
+font-size:16px;
+color:#aaa;
+      }
+
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
+<script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+<script>
+	//walletId sessionStorage삭제처리
+	sessionStorage.clear();
+
+	var socket = io.connect('http://54.180.101.155:3000');
+
+	socket.on('fromServer', function(data){
+		let currentBalance = 0;
+		currentBalance = data.afterBalance - data.beforeBalance;
+		if( sessionStorage.getItem('walletId') == data.walletId ){
+			alert('address: '+data.walletId+'\nbalance: '+data.afterBalance+'GXA(↑↑'+currentBalance+'GXA)');
+		}
+	});
+
+	function socketEmit(){
+		let walletId = '{{name}}';
+
+                if( walletId == '' ) {
+                        alert("5GXA를 지갑에 넣어드렸어요!");
+                } else {
+			socket.emit('event', { walletId: waletId , amount: '5' }); 
+		}
+	}
+
+</script>
+
+<script>
+	let walletArray = ['0xc589d49946c2ebd2550ed8407f6b1e633c87d65a',
+	'0x8CCC69223e026e88B5EDAB499d862e144C3F7590',
+	'0xA43f2c99CE9F2759938aa778724857FbdD7ba998',
+	'0x3B47989E9b7d84b054d22e2B602b1fde60074e86',
+	'0xE40e695FD7043b3a7004EC0D7132E20E0fD0b747'];
+
+	function createWallet() {	
+		var rand = Math.floor(Math.random()*walletArray.length);
+		var rValue = walletArray[rand];
+		$("#user_name").val(rValue);
+	}
+
+	function token_click(){
+		
+		let place = '{{name}}';
+		let advNumber = '{{advNumber}}';
+		let quiz = $("#quiz").val();
+
+		if( place == '' ) {
+			alert("5GXA를 지갑에 넣어드렸어요!");
+		} else {
+			//alert(place+"와 고객님께 각각 5GXA를 지갑에 넣어드렸어요!");
+			if(advNumber == '1'){
+				if(quiz == '해링턴'){
+					socket.emit('event', { walletId: place , amount: '5' });
+					alert("게시자와 고객님께 5GXA를 지갑에 넣어드렸어요!");
+				} else {
+					alert("정답이 아닙니다!");
+					return;
+				}
+			}
+		}
+	}
+
+	function move(adv){
+		if(adv == '0000'){
+			 location.href ='http://54.180.101.155';	
+		}
+	}
+
+	$(document).ready(function() {
+		$("#createQR").click(function() {
+			$("#qrcode").empty();
+			sessionStorage.clear();
+
+			var userName = $("#user_name").val();
+			userName = userName.replace(/ /g,"");
+			 $("#user_name").val(userName);
+
+			if(userName == '') {
+				alert('지갑주소를 입력해주세요');
+				return;
+			}
+
+			var qrcode = new QRCode(document.getElementById("qrcode"), {
+		        	text: "http://54.180.101.155/advertisement?advNumber=1&userName="+userName,
+			        width: 500,
+			        height: 500,
+		        	colorDark : "#000000",
+	        		colorLight : "#ffffff",
+			        correctLevel : QRCode.CorrectLevel.H
+			});
+
+			sessionStorage.setItem('walletId', userName);
+		});
+
+		$.getJSON('https://ipapi.co/json/', function(data) {
+			//console.log(JSON.stringify(data, null, 2));
+//			console.log(data);
+			//alert("고객님 IP는 "+data.ip+"입니다.");
+		});
+	});
+</script>
+
+</head>
+<body style="width:100%">
+
+	<!--	<div id="qrcode"></div> -->
+	<div onclick="move('0000')">
+		<h1 style="margin-left:5%; color:skyblue;"> 
+			< 뒤로가기
+		</h1>
+	</div>
+
+	<div style="text-align: center; font-size: 50px;">
+	{% if name %}
+	<! --{{name}}  부착한 광고입니다. -->
+	{% else %}
+	
+	{% endif %}
+	</div>
+
+	<div style="text-align: right; font-size: 35px;">
+        {% if viewCount %}
+        조회수: {{viewCount}}
+        {% else %}
+
+        {% endif %}
+        </div>
+
+	<div id="ex1" class="modal" style="max-width:900px; padding:30px 50px; ">
+	 <table border="1" style="width:700px; height:300px;">
+		<tr>
+   		    <td style="width:25%; color:black; font-size:30px; text-align:center;">부착방식</td>
+		    <td style="width:75%;">
+			<div style="padding:10px;">
+                                <select id="adv_type" name="adv_type">
+                                        <option value="sticker">스티커</option>
+                                        <option value="internet">인터넷</option>
+                                        <option value="pannel">판넬</option>
+                                </select>
+                        </div>
+		    </td>
+		</tr>
+		<tr>	
+			<td style="width:25%; color:black; font-size:30px; text-align:center;">지갑주소</td>
+		    	<td style="width:75%;">
+				<div style="padding:10px;">
+                                	<input type="text" id="user_name" placeholder="지갑주소를 입력하세요" style="font-size:30px; width:80%; backgroud:white;">
+					<div style="padding-top:10px; font-size:35px; color:black;">지갑주소가 없다면 <button onclick="createWallet();" style="font-size:30px;">지갑생성</button></div>
+                        	</div>
+		    	</td>
+		</tr>
+	</table>		
+
+	<!--
+		<div style="display:inline-block;">
+			<input type="text" id="user_name" placeholder="장소명을 입력하세요" style="font-size:30px;">
+			<div style="padding:10px;">
+				<select id="adv_type" name="adv_type">
+					<option value="sticker">스티커</option>
+					<option value="internet">인터넷</option>
+					<option value="pannel">판넬</option>
+				</select>
+			</div>
+			<div style="padding:10px;">
+				<input type="text" id="user_name" placeholder="지갑주소를 입력하세요" style="font-size:30px; width:80%; backgroud:white;"> 
+			</div>
+			<button id="createQR" style="font-size:30px;"> QR 생성</button>
+		</div>
+	-->
+		<div style="text-align:center;"><button id="createQR" style="font-size:30px; padding:10px;"> QR 생성</button></div>
+		<div style="margin-left:15%;"><div id="qrcode" style="padding-top:10%; padding-bottom:5%;"></div></div>
+		<a href="#" rel="modal:close" style="float: right; font-size: 40px;">닫기</a>
+	</div>
+
+	<!--	<p><a href="#ex1" rel="modal:open">QR코드 생성하기</a></p> -->
+
+	<div style="margin-top: -50px;">
+		<img src="HS.png" width="200" height="300" alt="Page Not Found" style="width: 90%; height: 150%; padding-top: 10%; margin: 6.5%;" />
+	</div>
+
+	<div style="text-align:center;">
+	{% if advNumber == '1' %}
+        {% else %}
+        {% endif %}
+
+	{% if name %}
+                <div style="font-size:45px; text-align:center;">효성이 지은 아파트 이름은 O O O 타워 이다.</div>
+                <input type="text" id="quiz" placeholder="정답을를 입력하세요" style="font-size:30px; width:80%; backgroud:white; padding:15px;">
+                <button onclick="token_click();" id="clickMe" style="background-color: #77af9c;color: #d7fff1; width:800px; height:200px; font-size:90px; " type="button">Coin Get!!</button>
+	{% else %}
+		<button style="background-color: #77af9c;color: #d7fff1; width:800px; height:200px; font-size:40px; " ><a href="#ex1" rel="modal:open">광고 부착하고 코인 받자!<br> 나만의 QR코드 생성하기</a></button>
+	{% endif %}
+	</div>
+
+	<!--        <button onclick="socketEmit();" id="clickMe" style="background-color: #77af9c;color: #d7fff1; width:800px; height:200px; font-size:90px; " type="button">Socket call!!</button> -->
+
+	<div style="text-align:center;">
+		<!--		<button id="createQR" style="background-color: #77af9c;color: #d7fff1; width:800px; height:200px; font-size:40px; " ><a href="#ex1" rel="modal:open">광고 부착하고 코인 받자!<br> 나만의 QR코드 생성하기</a></button>	 -->
+
+		<!--		<button style="background-color: #77af9c;color: #d7fff1; width:800px; height:200px; font-size:40px; " ><a href="#ex1" rel="modal:open">광고 부착하고 코인 받자!<br> 나만의 QR코드 생성하기</a></button> -->
+	</div>
+</body>
+</html>
